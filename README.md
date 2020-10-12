@@ -1,3 +1,3 @@
 ## Laravel Blog
 
-Laravel back-end for an application web
+Laravel back-end for a blog application web. 
