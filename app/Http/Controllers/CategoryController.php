@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -49,32 +50,41 @@ class CategoryController extends Controller
         // Get the form data
         $json =  $request->input('json'); //Default = null
         $inputData = json_decode($json,true);
-
+        $loggedUser = $request->get('loggedUser');
+        $roleUser = User::find($loggedUser->sub)->role;
         //Clean Data
         /*if(!empty($inputData))
             $inputData = array_map('trim', $inputData);*/
+        if($roleUser == 'Admin'){
 
-        // Data validation
-        $dataValidation = validator($inputData,[
-            'name' => 'required|unique:categories',
-        ]);
+            // Data validation
+            $dataValidation = validator($inputData,[
+                'name' => 'required|unique:categories',
+            ]);
 
-        if($dataValidation->fails()){
+            if($dataValidation->fails()){
+                $data = array(
+                    'status' => 'Error',
+                    'code' => 400,
+                    'message' => 'Problem with the category creation',
+                    'errors' => $dataValidation->errors()
+                );
+            }else{
+                // Category creation
+                $category  = Category::create($inputData);
+
+                $data = array(
+                    'status' => 'Success',
+                    'code' => 200,
+                    'message' => 'Category creation successful',
+                    'category' => $category
+                );
+            }
+        }else{
             $data = array(
                 'status' => 'Error',
                 'code' => 400,
-                'message' => 'Problem with the category creation',
-                'errors' => $dataValidation->errors()
-            );
-        }else{
-            // Category creation
-            $category  = Category::create($inputData);
-
-            $data = array(
-                'status' => 'Success',
-                'code' => 200,
-                'message' => 'Category creation successful',
-                'category' => $category
+                'message' => 'You don\'t have rights to create a category'
             );
         }
 
@@ -94,7 +104,7 @@ class CategoryController extends Controller
             $data = array(
                 'status' => 'Success',
                 'code' => 200,
-                'categoriy' => $category
+                'category' => $category
             );
         }else{
             $data = array(
@@ -128,42 +138,52 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         // Get the form data
-        if(Category::find($id) && is_numeric($id)){
-            $json =  $request->input('json'); //Default = null
-            $inputData = json_decode($json,true);
+        $loggedUser = $request->get('loggedUser');
+        $roleUser = User::find($loggedUser->sub)->role;
+        if($roleUser == 'Admin'){
+            if(Category::find($id) && is_numeric($id)){
+                $json =  $request->input('json'); //Default = null
+                $inputData = json_decode($json,true);
 
-            // Information that should not be modified
-            unset($inputData['id']);
-            unset($inputData['created_at']);
+                // Information that should not be modified
+                unset($inputData['id']);
+                unset($inputData['created_at']);
 
-            // Data validation
-            $dataValidation = validator($inputData,[
-                'name' => 'required|unique:categories,name,'.$id,
-            ]);
+                // Data validation
+                $dataValidation = validator($inputData,[
+                    'name' => 'required|unique:categories,name,'.$id,
+                ]);
 
-            if($dataValidation->fails()){
+                if($dataValidation->fails()){
+                    $data = array(
+                        'status' => 'Error',
+                        'code' => 400,
+                        'message' => 'Problem updating category ',
+                        'errors' => $dataValidation->errors()
+                    );
+                }else{
+                    // Category creation
+                    $category = Category::where('id', $id)->update($inputData);
+
+                    $data = array(
+                        'status' => 'Success',
+                        'code' => 200,
+                        'message' => 'Category update successful',
+                        'category' => $inputData
+                    );
+                }
+            }else{
                 $data = array(
                     'status' => 'Error',
                     'code' => 400,
-                    'message' => 'Problem updating category ',
-                    'errors' => $dataValidation->errors()
-                );
-            }else{
-                // Category creation
-                $category = Category::where('id', $id)->update($inputData);
-
-                $data = array(
-                    'status' => 'Success',
-                    'code' => 200,
-                    'message' => 'Category update successful',
-                    'category' => $inputData
+                    'message' => 'Category doesn\'t exists',
                 );
             }
         }else{
             $data = array(
                 'status' => 'Error',
                 'code' => 400,
-                'message' => 'Category doesn\'t exists',
+                'message' => 'You don\'t have rights to update a category'
             );
         }
 

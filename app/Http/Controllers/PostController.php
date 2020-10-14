@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -263,9 +264,11 @@ class PostController extends Controller
 
     public function postsByCategory($id){
         $posts = Post::where('category_id', $id)->get();
+        $category = Category::find($id);
         return response()->json(array(
             'status' => 'Success',
-            'post' => $posts
+            'post' => $posts,
+            'category' => $category->name
         ), 200);
     }
 
