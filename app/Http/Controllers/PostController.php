@@ -68,7 +68,6 @@ class PostController extends Controller
             'category_id' => 'required|integer|exists:categories,id',
             'title' => 'required',
             'content' => 'required',
-            'image' => 'required',
         ]);
 
         if($dataValidation->fails()){
@@ -157,8 +156,7 @@ class PostController extends Controller
                 'user_id' => 'required|integer|exists:users,id',
                 'category_id' => 'required|integer|exists:categories,id',
                 'title' => 'required',
-                'content' => 'required',
-                'image' => 'required',
+                'content' => 'required'
             ]);
 
             if($dataValidation->fails()){
