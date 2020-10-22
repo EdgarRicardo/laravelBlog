@@ -17,7 +17,8 @@ class PostController extends Controller
             'show',
             'getImagePosts',
             'postsByCategory',
-            'postsByUser']]);
+            'postsByUser',
+            'posts']]);
     }
     /**
      * Display a listing of the resource.
@@ -272,6 +273,14 @@ class PostController extends Controller
 
     public function postsByUser($id){
         $posts = Post::where('user_id', $id)->get();
+        return response()->json(array(
+            'status' => 'Success',
+            'post' => $posts
+        ), 200);
+    }
+
+    public function posts(){
+        $posts = Post::get();
         return response()->json(array(
             'status' => 'Success',
             'post' => $posts

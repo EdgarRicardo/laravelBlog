@@ -37,4 +37,5 @@ Route::post('/uploadImage', 'PostController@uploadImagePost');
 Route::get('/getImage/{filename}', 'PostController@getImagePosts');
 Route::get('/postsCategory/{id}', 'PostController@postsByCategory');
 Route::get('/postsUser/{id}', 'PostController@postsByUser');
+Route::get('/getPosts', 'PostController@posts');
 
