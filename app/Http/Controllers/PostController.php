@@ -262,7 +262,12 @@ class PostController extends Controller
     }
 
     public function postsByCategory($id){
-        $posts = Post::where('category_id', $id)->get();
+        //$posts = Post::where('category_id', $id)->get();
+         $posts = Post::select("u.name as uname","u.surname as usurname","posts.*","c.name as cname")
+         ->join("users as u","posts.user_id","=","u.id")
+         ->join("categories as c","posts.category_id","=","c.id")
+         ->where("c.id","=",$id)
+         ->get();
         $category = Category::find($id);
         return response()->json(array(
             'status' => 'Success',
@@ -272,7 +277,12 @@ class PostController extends Controller
     }
 
     public function postsByUser($id){
-        $posts = Post::where('user_id', $id)->get();
+        $posts = Post::select("u.name as uname","u.surname as usurname","posts.*","c.name as cname")
+                ->join("users as u","posts.user_id","=","u.id")
+                ->join("categories as c","posts.category_id","=","c.id")
+                ->where("u.id","=",$id)
+                ->get();
+        //$posts = Post::where('user_id', $id)->get();
         return response()->json(array(
             'status' => 'Success',
             'post' => $posts
@@ -280,7 +290,11 @@ class PostController extends Controller
     }
 
     public function posts(){
-        $posts = Post::get();
+        //$posts = Post::get();
+         $posts = Post::select("u.name as uname","u.surname as usurname","posts.*","c.name as cname")
+         ->join("users as u","posts.user_id","=","u.id")
+         ->join("categories as c","posts.category_id","=","c.id")
+         ->get();
         return response()->json(array(
             'status' => 'Success',
             'post' => $posts
