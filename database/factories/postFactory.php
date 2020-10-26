@@ -9,8 +9,9 @@ use Faker\Generator as Faker;
 $factory->define(Post::class, function (Faker $faker) {
     return [
         'user_id' =>  $faker->numberBetween($min = 1, $max = 10),
-        'category_id' =>  $faker->numberBetween($min = 1, $max = 10),
+        'category_id' =>  $faker->numberBetween($min = 1, $max = 5),
         'title' => $faker->lexify('The ??????? ????'),
-        'content' => $faker->text($maxNbChars = 200),
+        'image' => '1602700133unnamed.png',
+        'content' => $faker->text($maxNbChars = 1500),
     ];
 });
