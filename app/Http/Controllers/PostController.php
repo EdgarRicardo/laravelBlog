@@ -267,6 +267,7 @@ class PostController extends Controller
          ->join("users as u","posts.user_id","=","u.id")
          ->join("categories as c","posts.category_id","=","c.id")
          ->where("c.id","=",$id)
+         ->orderBy("posts.id","asc")
          ->get();
         $category = Category::find($id);
         return response()->json(array(
@@ -281,6 +282,7 @@ class PostController extends Controller
                 ->join("users as u","posts.user_id","=","u.id")
                 ->join("categories as c","posts.category_id","=","c.id")
                 ->where("u.id","=",$id)
+                ->orderBy("posts.id","asc")
                 ->get();
         //$posts = Post::where('user_id', $id)->get();
         return response()->json(array(
@@ -294,6 +296,7 @@ class PostController extends Controller
          $posts = Post::select("u.name as uname","u.surname as usurname","posts.*","c.name as cname")
          ->join("users as u","posts.user_id","=","u.id")
          ->join("categories as c","posts.category_id","=","c.id")
+         ->orderBy("posts.id","asc")
          ->get();
         return response()->json(array(
             'status' => 'Success',
