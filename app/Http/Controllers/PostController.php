@@ -150,6 +150,7 @@ class PostController extends Controller
 
             // Information that should not be modified
             unset($inputData['id']);
+            unset($inputData['updated_at']);
             unset($inputData['created_at']);
 
             // Data validation

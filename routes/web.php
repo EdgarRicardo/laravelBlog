@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\ApiAuthMiddleware;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,3 +40,10 @@ Route::get('/postsCategory/{id}', 'PostController@postsByCategory');
 Route::get('/postsUser/{id}', 'PostController@postsByUser');
 Route::get('/getPosts', 'PostController@posts');
 
+Route::post('/tokenValidation', function (Request $request) {
+    return response()->json(array(
+        'status' => 'Success',
+        'code' => 200,
+        'message' => 'Token validated',
+    ), 200);
+})->middleware('api.auth');
